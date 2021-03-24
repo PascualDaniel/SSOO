@@ -1,0 +1,15 @@
+// prog-V1-E7
+10
+3
+INC 1
+INC 1
+INC 1
+INC 1
+INC 1
+INC 1
+INC 1
+INC 1
+INC 1
+INC 1
+INC 1
+TRAP 3

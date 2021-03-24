@@ -1,0 +1,12 @@
+// Mi primer programa
+55  // Tamanio del programa en posiciones de memoria
+ADD 1 0
+WRITE 20 //CELDA 20 posicion del puntero para contar del 21 al 43
+
+MEMMULT 2 20 // 2* MEM DIR
+WRITE 20
+WRITE 128
+INC -1024 //IF >=43
+ZJUMP 2 
+JUMP -5
+HALT

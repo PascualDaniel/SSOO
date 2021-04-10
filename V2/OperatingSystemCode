@@ -6,4 +6,6 @@ OS 2 // SysCall Interrupt
 IRET
 OS 6 // Exception Interrupt
 IRET
+OS 9//Interrupcion reloj V2 Ej 2 ej 3 y ej 4
+IRET 
 

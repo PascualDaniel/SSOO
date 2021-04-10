@@ -41,6 +41,7 @@ void Processor_InitializeInterruptVectorTable(int interruptVectorInitialAddress)
 
 	interruptVectorTable[SYSCALL_BIT]=interruptVectorInitialAddress;  // SYSCALL_BIT=2
 	interruptVectorTable[EXCEPTION_BIT]=interruptVectorInitialAddress+2; // EXCEPTION_BIT=6
+	interruptVectorTable[CLOCKINT_BIT]=interruptVectorInitialAddress+4; // CLOCKINT_BIT=9 Ej 2 V2
 }
 
 // Fetch an instruction from main memory and put it in the IR register
@@ -62,6 +63,7 @@ int Processor_FetchInstruction() {
 		// Show message: operationCode operand1 operand2
 		char codedInstruction[13]; // Coded instruction with separated fields to show
 		Processor_GetCodedInstruction(codedInstruction,registerIR_CPU);
+		ComputerSystem_ShowTime(HARDWARE);
 		ComputerSystem_DebugMessage(68, HARDWARE, codedInstruction);
 	}
 	else {
@@ -193,6 +195,7 @@ void Processor_DecodeAndExecuteInstruction() {
 			if (Processor_PSW_BitState(EXECUTION_MODE_BIT)){ // Protected mode
 			// Show final part of HARDWARE message with CPU registers
 			// Show message: " (PC: registerPC_CPU, Accumulator: registerAccumulator_CPU, PSW: registerPSW_CPU [Processor_ShowPSW()]\n
+			//	ComputerSystem_ShowTime(HARDWARE);
 				ComputerSystem_DebugMessage(69, HARDWARE,InstructionNames[operationCode],operand1,operand2,registerPC_CPU,registerAccumulator_CPU,registerPSW_CPU,Processor_ShowPSW());
 			// Not all operating system code is executed in simulated processor, but really must do it... 
 				OperatingSystem_InterruptLogic(operand1);
@@ -245,6 +248,7 @@ void Processor_DecodeAndExecuteInstruction() {
 	
 	// Show final part of HARDWARE message with	CPU registers
 	// Show message: " (PC: registerPC_CPU, Accumulator: registerAccumulator_CPU, PSW: registerPSW_CPU [Processor_ShowPSW()]\n
+	//ComputerSystem_ShowTime(HARDWARE);
 	ComputerSystem_DebugMessage(69, HARDWARE, InstructionNames[operationCode],operand1,operand2,registerPC_CPU,registerAccumulator_CPU,registerPSW_CPU,Processor_ShowPSW());
 }
 	
@@ -256,7 +260,7 @@ void Processor_ManageInterrupts() {
 
 		for (i=0;i<INTERRUPTTYPES;i++)
 			// If an 'i'-type interrupt is pending
-			if (Processor_GetInterruptLineStatus(i)) {
+			if (Processor_GetInterruptLineStatus(i) && !Processor_PSW_BitState(INTERRUPT_MASKED_BIT)) {
 				// Deactivate interrupt
 				Processor_ACKInterrupt(i);
 				// Copy PC and PSW registers in the system stack
@@ -266,6 +270,8 @@ void Processor_ManageInterrupts() {
 				Processor_CopyInSystemStack(MAINMEMORYSIZE-3, registerAccumulator_CPU);	
 				// Activate protected excution mode
 				Processor_ActivatePSW_Bit(EXECUTION_MODE_BIT);
+				//eje 3-c V2
+				Processor_ActivatePSW_Bit(INTERRUPT_MASKED_BIT);
 				// Call the appropriate OS interrupt-handling routine setting PC register
 				registerPC_CPU=interruptVectorTable[i];
 				break; // Don't process another interrupt
@@ -285,6 +291,9 @@ char * Processor_ShowPSW(){
 		pswmask[tam-ZERO_BIT]='Z';
 	if (Processor_PSW_BitState(POWEROFF_BIT))
 		pswmask[tam-POWEROFF_BIT]='S';
+	//Eje 3-b V2 	
+	if (Processor_PSW_BitState(INTERRUPT_MASKED_BIT))
+ 		pswmask[tam-INTERRUPT_MASKED_BIT]='M';
 	return pswmask;
 }
 

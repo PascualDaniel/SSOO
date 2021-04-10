@@ -29,6 +29,7 @@ void ComputerSystem_PowerOn(int argc, char *argv[], int paramIndex) {
 	int nm=0;
 	nm=Messages_Load_Messages(nm,TEACHER_MESSAGES_FILE);
 	if (nm<0) {
+		ComputerSystem_ShowTime(SHUTDOWN);
 		ComputerSystem_DebugMessage(64,SHUTDOWN,TEACHER_MESSAGES_FILE);
 		exit(2);
 	}
@@ -52,6 +53,7 @@ void ComputerSystem_PowerOn(int argc, char *argv[], int paramIndex) {
 // Powers off the CS (the C program ends)
 void ComputerSystem_PowerOff() {
 	// Show message in red colour: "END of the simulation\n" 
+	ComputerSystem_ShowTime(SHUTDOWN);
 	ComputerSystem_DebugMessage(99,SHUTDOWN,"END of the simulation\n"); 
 	exit(0);
 }
@@ -60,9 +62,11 @@ void ComputerSystem_PowerOff() {
 //  New functions below this line  //////////////////////
 void ComputerSystem_PrintProgranList(){
 	int i;
+	ComputerSystem_ShowTime(INIT);
 	ComputerSystem_DebugMessage(101,INIT);
 	for (i=1;i<PROGRAMSMAXNUMBER;i++){
 		if( programList[i] != NULL){
+			//ComputerSystem_ShowTime(INIT);
 			ComputerSystem_DebugMessage(102,INIT,programList[i]->executableName,programList[i]->arrivalTime);
 		}
 	}

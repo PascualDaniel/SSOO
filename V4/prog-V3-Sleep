@@ -1,0 +1,7 @@
+35// Program size in memory cells
+10 // Priority of process (very low priority)
+NOP
+INC 5
+TRAP 7
+INC 1
+TRAP 3

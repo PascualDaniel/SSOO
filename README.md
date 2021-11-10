@@ -1,5 +1,4 @@
 SSOO
+Un sistema operativo basico de la asignatura Sistemas operativos de Uniovi.
+Coge lo que quieras
 
-V0 Completa Nota: 4
-V1 Completa Nota: ?
-v2 en proceso
